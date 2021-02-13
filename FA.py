@@ -1,5 +1,5 @@
-
-
+import networkx as nx
+import matplotlib.pyplot as plt
 
 vt = ["a", "b", "c"]
 vn = ["S", "B", "C", "D"]
@@ -12,6 +12,25 @@ grammar = {
 }
 
 isAnswerFound = False
+
+def showGraph():
+  G = nx.DiGraph()
+  node_labels = []
+  
+  for nonTerminalSymbol in vn:
+    if grammar[nonTerminalSymbol]:
+      for adjacencyTuple in grammar[nonTerminalSymbol]:
+        vertex =  adjacencyTuple[1] if adjacencyTuple[1] != None else "$"
+
+        node_labels.append(((nonTerminalSymbol, vertex), adjacencyTuple[0]))
+        G.add_edge(nonTerminalSymbol, vertex)
+
+  layout = nx.circular_layout(G)
+
+  nx.draw(G, layout, with_labels=True, font_weight='bold', connectionstyle="arc3,rad=0.1")
+  nx.draw_networkx_edge_labels(G, pos=layout, edge_labels=dict(node_labels), label_pos=0.2)
+
+  plt.show()
 
 def printPath(path):
   for vertexIndex in range(len(path)):
@@ -59,6 +78,7 @@ def main():
 
   if not isAnswerFound:
     print("The given string is not valid for current grammar")
-
+  
+  showGraph()
 
 main()
