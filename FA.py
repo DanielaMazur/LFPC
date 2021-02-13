@@ -1,17 +1,32 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-vt = ["a", "b", "c"]
-vn = ["S", "B", "C", "D"]
+vt = []
+vn = []
 
-grammar = {
-  "S":[("a", "B")], 
-  "B":[("b", "S"),("a", "C"),("b", None)],
-  "C":[("b", "D")],
-  "D":[("a", None),("b", "C"),("c", "S")],
-}
+grammar = dict()
 
 isAnswerFound = False
+
+def parseGrammar():
+  global vt, vn, grammar
+
+  file = open("v21.txt", "r")
+  fileContent = file.read()
+
+  vn = (fileContent[fileContent.index("VN")+4:fileContent.index("\n")-2]).split(", ")
+  vt = (fileContent[fileContent.index("VT")+4:fileContent.index("\n", fileContent.index("VT"))-2]).split(", ")
+
+  grammarList = (fileContent[fileContent.index("P")+3:fileContent.index("\n", fileContent.index("P"))-1]).split(", ")
+
+  for grammarRule in grammarList:
+    grammarComponents = grammarRule.split(" - ")
+    nextVertex = grammarComponents[1][1] if len(grammarComponents[1]) == 2 else None
+
+    if grammarComponents[0] not in grammar:
+      grammar[grammarComponents[0]] = []
+
+    grammar[grammarComponents[0]].append((grammarComponents[1][0], nextVertex))
 
 def showGraph():
   G = nx.DiGraph()
@@ -62,8 +77,9 @@ def FiniteAutomata(startVertex, visited, path, generatedWord, inputWord):
 
    
 def main(): 
-  print("Write a string to check if it is valid for the given grammar")
+  parseGrammar()
 
+  print("Write a string to check if it is valid for the given grammar")
   inputWord = str(input()) 
 
   areTerminalSymbolsValid = all(char in vt for char in inputWord)
