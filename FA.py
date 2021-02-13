@@ -98,6 +98,7 @@ def main():
 
   if not isAnswerFound:
     print("The given string is not valid for current grammar")
+    return
   
   showGraph()
 
