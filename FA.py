@@ -47,12 +47,16 @@ def showGraph():
 
   plt.show()
 
-def printPath(path):
+def printPath(path, word):
   for vertexIndex in range(len(path)):
-    if vertexIndex == len(path) - 1:
-      print(path[vertexIndex])
-      return
-    print(path[vertexIndex], end=" -> ")
+    if vertexIndex == 0:
+      print(path[vertexIndex], end=" -> ")
+      continue
+
+    print(word[0: vertexIndex] + path[vertexIndex], end=" -> ")
+
+  print(word)
+
 
 def FiniteAutomata(startVertex, visited, path, generatedWord, inputWord):
   global isAnswerFound 
@@ -62,7 +66,7 @@ def FiniteAutomata(startVertex, visited, path, generatedWord, inputWord):
 
   for adjacencyTuple in grammar[startVertex]: 
     if generatedWord + adjacencyTuple[0] == inputWord and adjacencyTuple[1] == None:
-      printPath(path)
+      printPath(path, inputWord)
       isAnswerFound = True
       return
 
